@@ -12,21 +12,31 @@ namespace Task1
         {
             int[] angleParams=new int[3];
             string[] angleParamsNames=new string[3] {"градусы", "минуты", "секунды"};
-            for (int i = 0; i< angleParams.Length; i++)
+            Angle angle1;
+            do
             {
-                Console.Write($"Введите {angleParamsNames[i]} ");
-                try
+                for (int i = 0; i < angleParams.Length; i++)
                 {
-                    angleParams[i] = Convert.ToInt32(Console.ReadLine());
+                    Console.Write($"Введите {angleParamsNames[i]} ");
+                    try
+                    {
+                        angleParams[i] = Convert.ToInt32(Console.ReadLine());
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                        Console.ReadKey();
+                        return;
+                    }
                 }
-                catch (Exception e)
+                angle1 = new Angle(angleParams[0], angleParams[1], angleParams[2]);
+                if (!angle1.IsCorrect)
                 {
-                    Console.WriteLine(e.Message);
-                    Console.ReadKey();
-                    return;
+                    Console.WriteLine("Введенные данные не корректны");
+                    
                 }
-            }           
-            var angle1 = new Angle(angleParams[0], angleParams[1], angleParams[2]);
+            } while (!angle1.IsCorrect);
+            
             Console.WriteLine("Значение угла в радианах равно "+angle1.ToRadians());
             Console.ReadKey();
         }
@@ -40,19 +50,16 @@ namespace Task1
         private int gradus;
         private int min;
         private int sec;
+        public bool IsCorrect { get; private set; }
         public int Gradus
         {
             get { return gradus; }
             set
             {
-                if (gradus < 0)
+                if (value < 0|| value > 359)
                 {
-                    gradus = 0;
-                }
-                else if (gradus > 359)
-                {
-                    gradus = 359;
-                }
+                    IsCorrect = false;
+                }               
                 else
                 {
                     gradus = value;
@@ -64,13 +71,9 @@ namespace Task1
             get { return min; }
             set
             {
-                if (min < 0)
+                if (value < 0||value>59)
                 {
-                    min = 0;
-                }
-                else if (min > 59)
-                {
-                    min = 59;
+                    IsCorrect = false;
                 }
                 else
                 {
@@ -83,13 +86,9 @@ namespace Task1
             get { return sec; }
             set 
             { 
-                if (sec<0)
+                if (value<0||value>59)
                 {
-                    sec = 0;
-                }
-                else if (sec>59)
-                {
-                    sec = 59;
+                    IsCorrect = false;
                 }
                 else
                 {
@@ -99,9 +98,10 @@ namespace Task1
         }
         public Angle(int gradus, int min, int sec)
         {
-            this.gradus = gradus;
-            this.min = min;
-            this.sec = sec;
+            IsCorrect = true;
+            this.Gradus = gradus;
+            this.Min = min;
+            this.Sec = sec;
         }
 
 
